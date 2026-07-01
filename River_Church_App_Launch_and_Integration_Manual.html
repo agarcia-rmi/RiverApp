@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>River Church App — Launch &amp; Integration Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0d2747; --navy-2:#15355f; --navy-3:#1d4476;
+  --ink:#1b2937; --paper:#f8f6ef; --paper-2:#fffdf7; --card:#ffffff;
+  --gold:#c19438; --gold-2:#e0bd6c; --river:#2090ad; --river-2:#54c8e3;
+  --line:#e6dfd0; --line-2:#efe9dc; --muted:#5f6c79; --muted-2:#8a94a0;
+  --disp:'Fraunces',Georgia,'Times New Roman',serif;
+  --body:'Inter',system-ui,-apple-system,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --shadow:0 18px 48px -28px rgba(13,39,71,.45);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:920px;margin:0 auto;padding:0 26px}
+h1,h2,h3,h4{font-family:var(--disp);font-weight:600;line-height:1.12;letter-spacing:-.01em;color:var(--navy)}
+a{color:var(--river)}
+p{margin:0 0 14px}
+strong{font-weight:600;color:var(--navy)}
+code{font-family:var(--mono);font-size:.86em;background:#eef1f4;color:#143258;padding:1.5px 6px;border-radius:5px;border:1px solid #e0e6ec}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;background:linear-gradient(160deg,#0b2240 0%,#0d2747 45%,#123059 100%);color:#eaf1f8;overflow:hidden}
+.hero .wrap{position:relative;z-index:2;padding:74px 26px 150px}
+.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(1100px 460px at 78% -8%,rgba(84,200,227,.16),transparent 60%),radial-gradient(760px 380px at 6% 12%,rgba(193,148,56,.16),transparent 60%);z-index:1}
+.kicker{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold-2);margin-bottom:24px}
+.kicker::before{content:"";width:26px;height:1.5px;background:var(--gold-2);display:inline-block}
+.hero h1{color:#fff;font-size:clamp(38px,6.4vw,68px);font-weight:600;margin:0 0 18px;letter-spacing:-.025em}
+.hero h1 em{font-style:italic;color:var(--gold-2);font-weight:500}
+.hero .lede{font-size:clamp(17px,2.3vw,21px);max-width:620px;color:#cddcec;font-family:var(--disp);font-weight:400;font-style:italic}
+.meta{margin-top:34px;display:flex;flex-wrap:wrap;gap:10px 30px;font-size:13px;color:#9fb6cd}
+.meta b{color:#dce8f4;font-weight:600;font-family:var(--body)}
+.wave{position:absolute;left:0;right:0;bottom:-1px;width:100%;height:120px;z-index:2;display:block}
+
+/* ---------- STICKY NAV ---------- */
+.nav{position:sticky;top:0;z-index:40;background:rgba(248,246,239,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);transition:transform .25s}
+.nav .wrap{display:flex;align-items:center;gap:18px;height:56px}
+.nav .brand{font-family:var(--disp);font-weight:600;color:var(--navy);font-size:15px;white-space:nowrap}
+.nav .brand span{color:var(--gold)}
+.nav ul{list-style:none;display:flex;gap:4px;margin:0;padding:0;overflow-x:auto;scrollbar-width:none}
+.nav ul::-webkit-scrollbar{display:none}
+.nav a{color:var(--muted);text-decoration:none;font-size:12.5px;font-weight:600;padding:7px 11px;border-radius:8px;white-space:nowrap;transition:.15s}
+.nav a:hover{background:#ece6d8;color:var(--navy)}
+.nav a.on{background:var(--navy);color:#fff}
+
+/* ---------- INTRO STRIP ---------- */
+.intro{padding:54px 0 8px}
+.intro p{font-size:17.5px;color:#2c3b49;max-width:740px}
+.intro .big{font-family:var(--disp);font-size:clamp(20px,2.6vw,25px);line-height:1.5;color:var(--navy);font-weight:500;margin-bottom:22px}
+
+/* ---------- FLOW / PARTS ---------- */
+.flow{position:relative;padding:30px 0 60px}
+.flow::before{content:"";position:absolute;left:21px;top:24px;bottom:60px;width:2px;background:linear-gradient(var(--gold) 0%,var(--river) 70%,var(--river-2) 100%);opacity:.5}
+.part{position:relative;padding:46px 0 8px 70px;scroll-margin-top:74px}
+.node{position:absolute;left:0;top:48px;width:44px;height:44px;border-radius:50%;background:var(--navy);color:var(--gold-2);display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:600;font-size:18px;box-shadow:0 0 0 5px var(--paper),0 8px 20px -8px rgba(13,39,71,.6);z-index:2}
+.eyebrow{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--river);margin-bottom:9px;font-weight:500}
+.part h2{font-size:clamp(26px,3.6vw,34px);margin:0 0 16px}
+.part h2 .sub{display:block;font-family:var(--body);font-size:14px;font-weight:500;color:var(--muted);letter-spacing:0;margin-top:8px;text-transform:none}
+h3{font-size:20px;margin:34px 0 12px;color:var(--navy-2)}
+h4{font-size:15.5px;margin:22px 0 8px;font-family:var(--body);font-weight:700;color:var(--navy-2);letter-spacing:.01em}
+
+/* ---------- CARDS / CALLOUTS ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow);margin:18px 0}
+.callout{border-radius:14px;padding:15px 18px 15px 17px;margin:18px 0;border-left:4px solid;font-size:14.5px}
+.callout p:last-child{margin:0}
+.callout .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;display:block;margin-bottom:5px}
+.c-note{background:#eef6f9;border-color:var(--river)}.c-note .lbl{color:var(--river)}
+.c-tip{background:#f3f7ee;border-color:#5a9e54}.c-tip .lbl{color:#4d8a47}
+.c-warn{background:#fdf3e9;border-color:var(--gold)}.c-warn .lbl{color:#b07d20}
+.c-key{background:#0d2747;border-color:var(--gold-2);color:#dbe7f3}.c-key .lbl{color:var(--gold-2)}
+.c-key strong{color:#fff}.c-key code{background:#1b3a60;color:#bfe0ec;border-color:#274f7b}
+
+/* ---------- STEPS ---------- */
+.steps{counter-reset:s;list-style:none;margin:18px 0;padding:0}
+.steps>li{position:relative;padding:4px 0 22px 52px;border-left:1.5px dashed var(--line);margin-left:16px}
+.steps>li:last-child{border-left:1.5px dashed transparent}
+.steps>li::before{counter-increment:s;content:counter(s);position:absolute;left:-16px;top:0;width:32px;height:32px;border-radius:50%;background:var(--paper);border:1.5px solid var(--gold);color:var(--navy);font-family:var(--mono);font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:center}
+.steps>li b{color:var(--navy)}
+.steps .st-h{font-weight:700;color:var(--navy);display:block;margin-bottom:3px;font-size:15.5px}
+
+/* ---------- TABLES ---------- */
+.tbl-wrap{margin:20px 0;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--card)}
+thead th{background:var(--navy);color:#e9f0f7;text-align:left;font-family:var(--body);font-weight:600;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;padding:12px 14px}
+tbody td{padding:12px 14px;border-top:1px solid var(--line-2);vertical-align:top}
+tbody tr:nth-child(even){background:#fbf9f3}
+td .feat{font-weight:600;color:var(--navy)}
+.f{font-family:var(--mono);font-size:12px;background:#eef1f4;color:#123056;padding:1px 6px;border-radius:5px;border:1px solid #e0e6ec;white-space:nowrap;display:inline-block;margin:1px 0}
+.tnerd{font-family:var(--mono);font-size:12px;color:var(--river);font-weight:500}
+
+/* ---------- CODE ---------- */
+.code{background:#0c2240;border:1px solid #1c3a5e;border-radius:12px;margin:16px 0;overflow:hidden}
+.code .ch{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid #1c3a5e;background:#0a1d36}
+.code .dot{width:10px;height:10px;border-radius:50%}
+.code .ch span{font-family:var(--mono);font-size:11px;color:#7d97b4;margin-left:6px;letter-spacing:.05em}
+.code pre{margin:0;padding:15px 16px;overflow-x:auto}
+.code code{font-family:var(--mono);font-size:12.7px;line-height:1.7;color:#cfe0f1;background:none;border:none;padding:0;white-space:pre}
+.code .cm{color:#6f88a4}.code .kw{color:#e0bd6c}.code .st{color:#9fd6b0}
+
+/* ---------- MISC ---------- */
+.pillrow{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.pill{font-family:var(--mono);font-size:11.5px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 12px;color:var(--navy-2);font-weight:500}
+.pill b{color:var(--gold)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.diagram{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 20px;box-shadow:var(--shadow);margin:20px 0;text-align:center}
+ul.clean{margin:12px 0;padding-left:22px}
+ul.clean li{margin:7px 0}
+.check{list-style:none;padding:0;margin:14px 0}
+.check li{position:relative;padding:9px 0 9px 34px;border-bottom:1px solid var(--line-2);font-size:14.5px}
+.check li::before{content:"";position:absolute;left:2px;top:11px;width:18px;height:18px;border:1.5px solid var(--gold);border-radius:5px}
+.check li b{color:var(--navy)}
+
+/* ---------- FOOTER ---------- */
+.foot{background:var(--navy);color:#aebfd2;padding:46px 0 40px;margin-top:30px}
+.foot .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:18px;align-items:flex-end}
+.foot h3{color:#fff;font-size:22px;margin:0 0 6px}
+.foot .mono{font-family:var(--mono);font-size:11.5px;color:#7e98b3;letter-spacing:.05em}
+.totop{position:fixed;right:20px;bottom:20px;width:46px;height:46px;border-radius:50%;background:var(--navy);color:var(--gold-2);border:none;cursor:pointer;box-shadow:0 10px 26px -8px rgba(13,39,71,.7);opacity:0;pointer-events:none;transition:.25s;z-index:50;font-size:18px}
+.totop.show{opacity:1;pointer-events:auto}
+
+@media(max-width:680px){
+  .two{grid-template-columns:1fr}
+  .part{padding-left:54px}
+  .node{width:38px;height:38px;font-size:15px;top:40px}
+  .flow::before{left:18px}
+  .hero .wrap{padding:54px 22px 120px}
+}
+@media print{
+  .nav,.totop,.wave{display:none!important}
+  body{background:#fff;font-size:12px}
+  .hero{background:#0d2747!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .card,.tbl-wrap,.code,.diagram{box-shadow:none;break-inside:avoid}
+  .part{break-inside:avoid-page;padding-top:24px}
+  thead th,.node,.c-key{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .code code{white-space:pre-wrap;overflow-wrap:anywhere}
+  .code pre{padding:13px 14px}
+}
+</style>
+</head>
+<body>
+
+<!-- ======================= HERO ======================= -->
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">The River at Tampa Bay · RMI</span>
+    <h1>River Church App<br><em>Launch &amp; Integration Manual</em></h1>
+    <p class="lede">From a working prototype to a published app — wired into MinistryPlatform, signed in by your members, and live on the App Store and Google Play.</p>
+    <div class="meta">
+      <span>Prepared for&nbsp; <b>Co-Pastor Deanna Gilbert</b></span>
+      <span>Edition&nbsp; <b>1.0 · June 2026</b></span>
+      <span>Scope&nbsp; <b>iOS · Android · MinistryPlatform</b></span>
+    </div>
+  </div>
+  <svg class="wave" viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,64 C240,128 480,16 720,52 C960,88 1200,120 1440,72 L1440,120 L0,120 Z" fill="#f8f6ef"/>
+    <path d="M0,80 C260,40 520,116 760,80 C1000,46 1220,96 1440,66 L1440,120 L0,120 Z" fill="#f8f6ef" opacity=".55"/>
+  </svg>
+</header>
+
+<!-- ======================= NAV ======================= -->
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <div class="brand">River<span>·</span>App</div>
+    <ul>
+      <li><a href="#p1">Overview</a></li>
+      <li><a href="#p2">Member Login</a></li>
+      <li><a href="#p3">MP Tables</a></li>
+      <li><a href="#p4">Store Launch</a></li>
+      <li><a href="#p5">Native Powers</a></li>
+      <li><a href="#p6">Content</a></li>
+      <li><a href="#p7">Privacy</a></li>
+      <li><a href="#p8">Next Steps</a></li>
+      <li><a href="#p9">Checklist</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ======================= INTRO ======================= -->
+<section class="intro">
+  <div class="wrap">
+    <p class="big">What you have today is the <strong>face</strong> of the app — every screen, flow, and interaction your members will touch. What this manual covers is the <strong>plumbing behind it</strong>: how a member signs in, where each piece of information lives in MinistryPlatform, and the exact steps to package and publish it.</p>
+    <p>Read it top to bottom for the full journey, or jump to a part from the bar above. Field names from MinistryPlatform appear as <span class="f">Table.[Column]</span> chips so your developer can search for them directly. Nothing here requires throwing away the prototype — the production app is the <em>same interface</em>, wrapped for the stores and connected to live data.</p>
+  </div>
+</section>
+
+<!-- ======================= FLOW ======================= -->
+<div class="flow"><div class="wrap">
+
+<!-- ===== PART 1 ===== -->
+<section class="part" id="p1">
+  <span class="node">01</span>
+  <span class="eyebrow">The big picture</span>
+  <h2>How the pieces fit together<span class="sub">Three parts: the app, a small backend, and MinistryPlatform.</span></h2>
+
+  <p>The prototype is a single web file that draws every screen and fills it with sample data. To go live, three things work together. Keeping them separate is what keeps members' giving and contact data safe.</p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 760 200" width="100%" style="max-width:680px" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+      <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#2090ad"/></marker></defs>
+      <rect x="20" y="58" width="180" height="84" rx="14" fill="#0d2747"/>
+      <text x="110" y="92" fill="#fff" font-size="15" font-weight="600" text-anchor="middle">The App</text>
+      <text x="110" y="114" fill="#9fb6cd" font-size="11" text-anchor="middle">iOS · Android shell</text>
+      <rect x="290" y="58" width="180" height="84" rx="14" fill="#fff" stroke="#c19438" stroke-width="1.5"/>
+      <text x="380" y="92" fill="#0d2747" font-size="15" font-weight="600" text-anchor="middle">Backend API</text>
+      <text x="380" y="114" fill="#5f6c79" font-size="11" text-anchor="middle">holds the secrets</text>
+      <rect x="560" y="58" width="180" height="84" rx="14" fill="#15355f"/>
+      <text x="650" y="88" fill="#fff" font-size="15" font-weight="600" text-anchor="middle">Ministry</text>
+      <text x="650" y="106" fill="#fff" font-size="15" font-weight="600" text-anchor="middle">Platform</text>
+      <line x1="200" y1="100" x2="284" y2="100" stroke="#2090ad" stroke-width="2" marker-end="url(#ar)"/>
+      <line x1="470" y1="100" x2="554" y2="100" stroke="#2090ad" stroke-width="2" marker-end="url(#ar)"/>
+      <text x="242" y="90" fill="#5f6c79" font-size="10.5" text-anchor="middle">token</text>
+      <text x="512" y="90" fill="#5f6c79" font-size="10.5" text-anchor="middle">OAuth + REST</text>
+      <text x="380" y="178" fill="#8a94a0" font-size="11" text-anchor="middle">Push (APNs / FCM) and outside links (Pushpay, Stream) flow around the backend.</text>
+    </svg>
+  </div>
+
+  <h4>The app (what members install)</h4>
+  <p>Your existing interface, packaged in a thin native shell so it can live on the stores, send push notifications, store sermon notes on-device, and open the camera for check-in. It never holds passwords or platform keys.</p>
+  <h4>The backend (the trusted middle)</h4>
+  <p>A small service that holds the MinistryPlatform client secret, signs members in, and shapes data before it reaches the phone. This is the single most important rule of the build:</p>
+  <div class="callout c-key"><span class="lbl">Non-negotiable</span><p><strong>MinistryPlatform credentials never live in the app.</strong> Anything shipped to a phone can be read by anyone. The client secret, service-account login, and direct database access stay on the backend only.</p></div>
+  <h4>MinistryPlatform (the source of truth)</h4>
+  <p>Every member, household, gift, group, and event already lives here. The app reads and writes through MinistryPlatform's OAuth login and REST API — ideally through the custom Page Views and stored procedures your team already builds, rather than raw tables.</p>
+</section>
+
+<!-- ===== PART 2 ===== -->
+<section class="part" id="p2">
+  <span class="node">02</span>
+  <span class="eyebrow">Who's signing in</span>
+  <h2>Member login with MinistryPlatform<span class="sub">OAuth 2.0 / OpenID Connect — the same sign-in your membership course already uses.</span></h2>
+
+  <p>Members log in with their MinistryPlatform account. MinistryPlatform acts as the identity provider, so the app never sees or stores a password — it receives a short-lived token that proves who the person is and what they're allowed to see.</p>
+
+  <h3>Set it up once in MinistryPlatform</h3>
+  <ol class="steps">
+    <li><span class="st-h">Register the app as an OAuth client</span>In the MinistryPlatform OAuth/OIDC settings, create a client for the mobile app. You'll get a <strong>Client ID</strong>; the matching <strong>secret</strong> stays on the backend.</li>
+    <li><span class="st-h">Use Authorization Code with PKCE</span>This is the flow built for phones — it works safely without shipping a secret in the app. Turn on PKCE for the mobile client.</li>
+    <li><span class="st-h">Add redirect URIs</span>Register a custom scheme and/or universal link so the login hands control back to the app, e.g. <code>com.revival.theriver://auth</code> and <code>https://mp.revival.com/app/auth</code>.</li>
+    <li><span class="st-h">Request the right scopes</span>So the app can identify the member and read their data on their behalf.</li>
+  </ol>
+
+  <div class="pillrow">
+    <span class="pill"><b>scope</b> &nbsp;openid</span>
+    <span class="pill"><b>scope</b> &nbsp;offline_access</span>
+    <span class="pill"><b>scope</b> &nbsp;http://www.thinkministry.com/dataplatform/scopes/all</span>
+  </div>
+
+  <h3>What happens when a member taps "Sign in"</h3>
+  <ol class="steps">
+    <li><span class="st-h">App opens the secure browser</span>It sends the member to the MinistryPlatform authorize endpoint with the Client ID, scopes, and a one-time PKCE challenge.</li>
+    <li><span class="st-h">Member logs in on MinistryPlatform's page</span>They never type their password into your app — only into MinistryPlatform.</li>
+    <li><span class="st-h">MinistryPlatform redirects back</span>It returns an authorization code to the app's redirect URI.</li>
+    <li><span class="st-h">Code is exchanged for tokens</span>The app (with PKCE) trades the code for an <strong>ID token</strong>, an <strong>access token</strong>, and a <strong>refresh token</strong>.</li>
+    <li><span class="st-h">Tokens are stored securely</span>In the iOS Keychain / Android Keystore — never in plain storage.</li>
+    <li><span class="st-h">Member is resolved to a record</span>The access token is sent to the backend, which calls MinistryPlatform to map the login to a person.</li>
+  </ol>
+
+  <div class="code">
+    <div class="ch"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span>authorize request</span></div>
+<pre><code><span class="cm"># Step 1 — send the member to MinistryPlatform</span>
+GET https://mp.revival.com/ministryplatformapi/oauth/connect/authorize
+      ?client_id=<span class="st">river_church_app</span>
+      &response_type=<span class="st">code</span>
+      &scope=<span class="st">openid offline_access http://www.thinkministry.com/dataplatform/scopes/all</span>
+      &redirect_uri=<span class="st">com.revival.theriver://auth</span>
+      &code_challenge=<span class="st">{pkce_challenge}</span>
+      &code_challenge_method=<span class="st">S256</span></code></pre>
+  </div>
+  <div class="code">
+    <div class="ch"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span>token exchange</span></div>
+<pre><code><span class="cm"># Step 4 — trade the code for tokens (PKCE, no secret needed)</span>
+POST https://mp.revival.com/ministryplatformapi/oauth/connect/token
+   grant_type=<span class="st">authorization_code</span>
+   code=<span class="st">{returned_code}</span>
+   redirect_uri=<span class="st">com.revival.theriver://auth</span>
+   code_verifier=<span class="st">{pkce_verifier}</span></code></pre>
+  </div>
+
+  <div class="callout c-note"><span class="lbl">Mapping login → person</span><p>The ID token identifies the MinistryPlatform user. The backend resolves that user to <span class="f">dp_Users.[User_ID]</span> and then to their <span class="f">Contacts.[Contact_ID]</span>. From that point on, every screen in the app is filtered to <em>that member's</em> household, giving, groups, and badge.</p></div>
+
+  <div class="callout c-tip"><span class="lbl">Keep them signed in</span><p>Use the refresh token to renew access quietly in the background so members aren't asked to log in every time. Offer a clear <strong>Sign out</strong> that deletes the stored tokens.</p></div>
+</section>
+
+<!-- ===== PART 3 ===== -->
+<section class="part" id="p3">
+  <span class="node">03</span>
+  <span class="eyebrow">Where everything lives</span>
+  <h2>MinistryPlatform tables &amp; field mappings<span class="sub">Every screen in the app, matched to the MinistryPlatform data behind it.</span></h2>
+
+  <p>These are the connections your developer wires up. Confirmed mappings (already verified against your MinistryPlatform) are marked. Read access is best served through custom <strong>Page Views</strong>; writes (requests, soul reports, check-ins) go through the REST API or stored procedures.</p>
+
+  <h3>Identity, badge &amp; membership</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>App area</th><th>MinistryPlatform table</th><th>Key fields</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><span class="feat">Profile &amp; name</span></td><td><span class="tnerd">Contacts</span></td><td><span class="f">Contacts.[Nickname]</span> <span class="f">Contacts.[Last_Name]</span> <span class="f">Contacts.[Email_Address]</span> <span class="f">Contacts.[Mobile_Phone]</span></td><td>The signed-in member's record.</td></tr>
+      <tr><td><span class="feat">Check-in badge (QR)</span></td><td><span class="tnerd">Contacts</span></td><td><span class="f">Contacts.[ID_Card]</span></td><td><strong>Confirmed.</strong> Drives the QR for both member and guest badges.</td></tr>
+      <tr><td><span class="feat">Member status</span></td><td><span class="tnerd">Participants</span></td><td><span class="f">…Member_Status_ID_Table.[Member_Status]</span></td><td><strong>Confirmed.</strong> Gates member-only features &amp; badge styling.</td></tr>
+      <tr><td><span class="feat">"Member since"</span></td><td><span class="tnerd">Participants</span></td><td><span class="f">Participant_Record_Table.[Status_Date]</span></td><td><strong>Confirmed.</strong> Shown on the member badge.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>My Household</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>App area</th><th>MinistryPlatform table</th><th>Key fields</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><span class="feat">Household members</span></td><td><span class="tnerd">Households · Contacts</span></td><td><span class="f">Contacts.[Nickname]</span> <span class="f">Contacts.[Last_Name]</span> <span class="f">Households_Household_Position</span> <span class="f">Contacts.[__Age]</span></td><td><strong>Confirmed.</strong> Name on top; position · age beneath.</td></tr>
+      <tr><td><span class="feat">Address on file</span></td><td><span class="tnerd">Addresses</span></td><td><span class="f">Address_Line_1</span> <span class="f">City</span> <span class="f">State/Region</span> <span class="f">Postal_Code</span></td><td>Read-only in the app.</td></tr>
+      <tr><td><span class="feat">Request a household update</span></td><td><span class="tnerd">Feedback_Entries</span></td><td><span class="f">Feedback_Type</span> <span class="f">Contact_ID</span> <span class="f">Description</span></td><td>Writes a "Household Update" request for staff to action.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Giving, events &amp; groups</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>App area</th><th>MinistryPlatform table</th><th>Key fields</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><span class="feat">My Giving &amp; YTD</span></td><td><span class="tnerd">Donations · Donation_Distributions · Funds</span></td><td><span class="f">Donation_Amount</span> <span class="f">Donation_Date</span> <span class="f">Fund_ID</span></td><td>Read-only history. YTD = sum of the member's gifts this calendar year; the "last year" compare sums the same window a year prior.</td></tr>
+      <tr><td><span class="feat">Recent gifts &amp; statement</span></td><td><span class="tnerd">Donations</span></td><td><span class="f">Donation_Date</span> <span class="f">Donation_Amount</span></td><td>45-day "please allow" note covers settlement lag. Actual giving happens in Pushpay.</td></tr>
+      <tr><td><span class="feat">Events &amp; registration</span></td><td><span class="tnerd">Events · Event_Participants</span></td><td><span class="f">Event_Title</span> <span class="f">Event_Start_Date</span> <span class="f">Participation_Status_ID</span></td><td>Register writes an Event_Participant; embed-blocking links open outward.</td></tr>
+      <tr><td><span class="feat">Groups</span></td><td><span class="tnerd">Groups · Group_Participants</span></td><td><span class="f">Group_Name</span> <span class="f">Group_Type_ID</span> <span class="f">Contact_ID</span></td><td>"Find community" lists open groups; joining writes a Group_Participant.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Ministry actions &amp; content</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>App area</th><th>MinistryPlatform table</th><th>Key fields</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><span class="feat">Prayer / care requests</span></td><td><span class="tnerd">Feedback_Entries</span></td><td><span class="f">Feedback_Type</span> <span class="f">Description</span> <span class="f">Contact_ID</span></td><td>One request type per category; routed to the right team.</td></tr>
+      <tr><td><span class="feat">Souls won + testimony</span></td><td><span class="tnerd">Form_Responses</span> <span class="muted">or custom table</span></td><td><span class="f">Soul_Count</span> <span class="f">Date</span> <span class="f">City_State</span> <span class="f">Testimony</span> <span class="f">Approved</span></td><td>Testimonies stay hidden until <span class="f">[Approved]</span> = 1 (see Part 7).</td></tr>
+      <tr><td><span class="feat">Membership course</span></td><td><span class="tnerd">Milestones · Participant_Milestones</span></td><td><span class="f">Milestone_ID</span> <span class="muted">(#148)</span> <span class="f">Contact_ID</span></td><td>Completing the course at <code>membercourse.netlify.app</code> auto-awards the milestone.</td></tr>
+      <tr><td><span class="feat">Push notification tokens</span></td><td><span class="tnerd">custom · App_Device_Tokens</span></td><td><span class="f">Contact_ID</span> <span class="f">Device_Token</span> <span class="f">Platform</span></td><td>Links a phone to a person so notifications can target members only.</td></tr>
+      <tr><td><span class="feat">Word of the Week</span></td><td><span class="tnerd">custom · App_Word_Of_Week</span></td><td><span class="f">Week_Start</span> <span class="f">Confession</span> <span class="f">Verse</span> <span class="f">Reference</span></td><td>One or more entries per week (see Part 6).</td></tr>
+      <tr><td><span class="feat">Leadership Principles</span></td><td><span class="tnerd">custom · App_Leadership_Principles</span></td><td><span class="f">Day_Of_Year</span> <span class="f">Principle</span></td><td>365 rows, one per day (see Part 6).</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout c-tip"><span class="lbl">Recommended pattern</span><p>Expose each read above as a <strong>Page View</strong> filtered to the signed-in contact, the way your team already builds custom views. The app calls the view; the view returns only that member's rows. It's faster to wire and easier to secure than raw table access.</p></div>
+</section>
+
+<!-- ===== PART 4 ===== -->
+<section class="part" id="p4">
+  <span class="node">04</span>
+  <span class="eyebrow">Getting it published</span>
+  <h2>Shipping to the App Store &amp; Google Play<span class="sub">Wrap the existing web app with Capacitor, then submit to both stores.</span></h2>
+
+  <p>Because the prototype is already a complete web app, the fastest honest path to both stores is <strong>Capacitor</strong> — a native shell that runs your web app and adds the native abilities it needs (push, camera, secure storage). You keep one codebase and ship to iOS and Android from it.</p>
+
+  <h3>4.0 — Gather these first</h3>
+  <ul class="clean">
+    <li><strong>Apple Developer Program</strong> — about $99/year, required to publish on the App Store.</li>
+    <li><strong>Google Play Console</strong> — a one-time $25 registration.</li>
+    <li><strong>App icon &amp; splash screen</strong> in the River brand (navy &amp; gold).</li>
+    <li><strong>A privacy policy URL and a support URL</strong> — both stores require them.</li>
+    <li><strong>Screenshots</strong> for each required device size.</li>
+  </ul>
+
+  <h3>4.1 — Wrap the web app with Capacitor</h3>
+  <div class="code">
+    <div class="ch"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span>terminal</span></div>
+<pre><code><span class="cm"># from the project folder containing the web app</span>
+npm install @capacitor/core @capacitor/cli
+npx cap init <span class="st">"River Church"</span> <span class="st">com.revival.theriver</span>
+
+<span class="cm"># point Capacitor at the folder with index.html, then add platforms</span>
+npx cap add ios
+npx cap add android
+npx cap copy</code></pre>
+  </div>
+
+  <h3>4.2 — Set the app's identity</h3>
+  <ol class="steps">
+    <li><span class="st-h">App ID &amp; name</span>Bundle/Application ID <code>com.revival.theriver</code>, display name "River Church" (with an RMI variant if you ship two).</li>
+    <li><span class="st-h">Version &amp; build numbers</span>Start at <code>1.0.0 (1)</code>; bump the build for every upload.</li>
+    <li><span class="st-h">Icons &amp; splash</span>Generate every required size from one master asset and drop them into each platform.</li>
+  </ol>
+
+  <h3>4.3 — Add the native abilities</h3>
+  <div class="pillrow">
+    <span class="pill"><b>push</b> &nbsp;@capacitor/push-notifications</span>
+    <span class="pill"><b>secure</b> &nbsp;@capacitor/preferences</span>
+    <span class="pill"><b>links</b> &nbsp;@capacitor/browser</span>
+    <span class="pill"><b>deep-link</b> &nbsp;@capacitor/app</span>
+    <span class="pill"><b>camera</b> &nbsp;@capacitor/camera</span>
+  </div>
+  <p>These map directly to features already in the prototype: push for announcements, secure storage for sermon notes and tokens, the in-app browser for embeddable pages, deep links for the OAuth return, and the camera for QR check-in.</p>
+
+  <h3>4.4 — iOS: build &amp; submit</h3>
+  <ol class="steps">
+    <li><span class="st-h">Open in Xcode</span><code>npx cap open ios</code>, then sign in with your Apple Developer team under Signing &amp; Capabilities.</li>
+    <li><span class="st-h">Turn on capabilities</span>Push Notifications and Associated Domains (for universal-link login).</li>
+    <li><span class="st-h">Create the App Store Connect listing</span>Name, subtitle, description, keywords, screenshots, support &amp; privacy URLs.</li>
+    <li><span class="st-h">Fill the App Privacy labels</span>Declare what you collect: contact info, financial info (giving), and identifiers. Be accurate — this is reviewed.</li>
+    <li><span class="st-h">Upload &amp; test via TestFlight</span>Archive in Xcode, upload, invite your staff to test on real phones.</li>
+    <li><span class="st-h">Submit for review</span>Apple typically reviews within a day or two.</li>
+  </ol>
+
+  <h3>4.5 — Android: build &amp; submit</h3>
+  <ol class="steps">
+    <li><span class="st-h">Open in Android Studio</span><code>npx cap open android</code> and let Gradle sync.</li>
+    <li><span class="st-h">Create a signing keystore</span>Generate it once and keep it safe — you need the same key for every future update.</li>
+    <li><span class="st-h">Build a signed App Bundle</span>Produce the <code>.aab</code> for upload.</li>
+    <li><span class="st-h">Create the Play Console listing</span>Title, description, graphics, screenshots, category (Lifestyle), and content rating.</li>
+    <li><span class="st-h">Complete the Data safety form</span>The Google equivalent of Apple's privacy labels — disclose contact and financial data.</li>
+    <li><span class="st-h">Release through Internal testing → Production</span>Test with staff first, then roll out.</li>
+  </ol>
+
+  <div class="callout c-warn"><span class="lbl">Review gotchas — read before submitting</span>
+    <p style="margin-bottom:9px"><strong>Member testimonies are user content.</strong> Apple's rules require apps with user-posted content to filter objectionable material and give a way to <strong>report</strong> and <strong>block</strong>. Your moderation gate (Part 7) covers filtering; add report/block to be safe.</p>
+    <p style="margin-bottom:9px"><strong>Account deletion is required.</strong> Both stores require an in-app way to request account/data deletion. Provide a clear path that signs the member out and submits a deletion request.</p>
+    <p style="margin-bottom:0"><strong>Giving stays in Pushpay.</strong> Charitable donations are allowed outside in-app purchase, so routing to Pushpay is fine — just present it as a donation, not a purchase of goods. Confirm the current Apple and Google donation rules at submission time, as store policies change.</p>
+  </div>
+
+  <h3>4.6 — After launch</h3>
+  <p>Content and web-app fixes can ship as over-the-air updates (e.g., Capacitor live updates) without a new store review. Changes to native code, permissions, or icons require a new build and review. Keep the version number moving so members always see "up to date."</p>
+</section>
+
+<!-- ===== PART 5 ===== -->
+<section class="part" id="p5">
+  <span class="node">05</span>
+  <span class="eyebrow">The native layer</span>
+  <h2>Turning prototype features into real powers<span class="sub">What each simulated feature needs to become live.</span></h2>
+
+  <div class="two">
+    <div class="card"><h4 style="margin-top:0">Push notifications</h4><p style="margin:0;font-size:14.5px">Register the device on login, store its token against <span class="f">Contact_ID</span>, and send through APNs (iOS) and FCM (Android), or a service like OneSignal. Because tokens are tied to people, you can target <strong>members only</strong> — for example, the member-badge prompt.</p></div>
+    <div class="card"><h4 style="margin-top:0">Sermon Notes</h4><p style="margin:0;font-size:14.5px">Stay <strong>on the device</strong> in secure storage, kept ~45 days with a clear deletion warning. They're personal and private — they never sync to MinistryPlatform unless you decide otherwise later.</p></div>
+    <div class="card"><h4 style="margin-top:0">Streaming &amp; external links</h4><p style="margin:0;font-size:14.5px">Embeddable pages open in the in-app browser. Sites that block embedding — <strong>Stream, Suno, Pushpay</strong>, YouTube, Vimeo — open in the phone's browser instead. That's expected behavior, not a bug.</p></div>
+    <div class="card"><h4 style="margin-top:0">Liquid-glass theming</h4><p style="margin:0;font-size:14.5px">The glass refraction is a Chromium effect, so it shows fully on Android and falls back gracefully on iPhone (WebKit). A native build can use Apple's own material for the same feel on iOS.</p></div>
+  </div>
+</section>
+
+<!-- ===== PART 6 ===== -->
+<section class="part" id="p6">
+  <span class="node">06</span>
+  <span class="eyebrow">What the church updates</span>
+  <h2>Content your team keeps fresh<span class="sub">No developer needed — staff update these directly.</span></h2>
+
+  <h3>Word of the Week</h3>
+  <p>The Home bubble shows a weekly <strong>confession and a Bible verse</strong> from Sunday's service. Each week is a <em>set</em> of entries, and the app cycles through them across the days of that week:</p>
+  <ul class="clean">
+    <li><strong>1 entry</strong> → shown all week.</li>
+    <li><strong>3 entries</strong> → rotate every couple of days.</li>
+    <li><strong>7 entries</strong> → a different one each day.</li>
+  </ul>
+  <p>Staff open the record for the upcoming week, add the confession and verse (with reference), and save. It goes live at the start of that week — queue future weeks ahead of time. KJV is public domain; for other translations, supply the licensed text.</p>
+
+  <h3>Leadership Principles</h3>
+  <p>The carousel card shows one principle per day. The simplest storage is a single ordered list of <strong>365 rows</strong> — <span class="f">Day_Of_Year</span> from 1 to 365 — read by today's day number. Because it keys on day-of-year (not a specific year), the same list repeats annually with zero upkeep. Handle Feb 29 by reusing day 365.</p>
+</section>
+
+<!-- ===== PART 7 ===== -->
+<section class="part" id="p7">
+  <span class="node">07</span>
+  <span class="eyebrow">Trust &amp; safety</span>
+  <h2>Moderation, privacy &amp; data care<span class="sub">Protecting your members and clearing store review.</span></h2>
+
+  <h3>Testimony moderation</h3>
+  <p>Testimonies and soul reports are reviewed before anyone else sees them. The app submits them, but they remain hidden until a staff member approves them in MinistryPlatform.</p>
+  <div class="callout c-key"><span class="lbl">The gate</span><p>Nothing displays publicly unless <span class="f">[Approved]</span> = 1. Just as important: <strong>the app never shows a member whether their entry was approved, rejected, or featured.</strong> Approval status is staff-only — surfacing it would pressure and expose people who shared something tender.</p></div>
+
+  <h3>Privacy &amp; data safety</h3>
+  <ul class="clean">
+    <li><strong>Sensitive by nature.</strong> Giving history and contact details are personal. Disclose them honestly in the App Store privacy labels and the Google Data safety form.</li>
+    <li><strong>Least exposure.</strong> The backend returns only the signed-in member's data, and only the fields a screen needs.</li>
+    <li><strong>Deletion on request.</strong> Provide an in-app path to request account and data deletion, as both stores require.</li>
+    <li><strong>Secure tokens.</strong> Login tokens live in the Keychain / Keystore and are cleared on sign-out.</li>
+  </ul>
+</section>
+
+<!-- ===== PART 8 ===== -->
+<section class="part" id="p8">
+  <span class="node">08</span>
+  <span class="eyebrow">Where to begin</span>
+  <h2>Known challenges &amp; a first sprint<span class="sub">An honest look at the hard parts, and the order to tackle them.</span></h2>
+
+  <h4>The parts that take the most care</h4>
+  <ul class="clean">
+    <li><strong>The backend is real work.</strong> The app is largely done; the trusted middle layer (login, data shaping, push) is the main build.</li>
+    <li><strong>Store compliance.</strong> User content, account deletion, and donation rules each need a deliberate answer before submission.</li>
+    <li><strong>Custom content tables.</strong> Device tokens, Word of the Week, and Leadership Principles need new tables or views in MinistryPlatform.</li>
+  </ul>
+
+  <h4>A sensible first sprint</h4>
+  <ol class="steps">
+    <li><span class="st-h">Stand up the backend &amp; MinistryPlatform login</span>Prove a member can sign in and the app resolves their <span class="f">Contact_ID</span>.</li>
+    <li><span class="st-h">Wire the read-only screens</span>Profile, household, badge, giving — through Page Views. These deliver value fast and carry low risk.</li>
+    <li><span class="st-h">Add the write actions</span>Requests, soul reports, group join, event registration.</li>
+    <li><span class="st-h">Wrap with Capacitor &amp; ship to TestFlight / Internal testing</span>Get it onto staff phones before polishing.</li>
+    <li><span class="st-h">Layer in push &amp; submit</span>Add notifications, complete privacy forms, and release.</li>
+  </ol>
+</section>
+
+<!-- ===== PART 9 ===== -->
+<section class="part" id="p9">
+  <span class="node">09</span>
+  <span class="eyebrow">Before you submit</span>
+  <h2>Launch checklist<span class="sub">A quick pass to confirm you're ready for both stores.</span></h2>
+
+  <div class="card">
+    <ul class="check">
+      <li><b>Backend live</b> — holds the MinistryPlatform secret; app holds none.</li>
+      <li><b>OAuth client registered</b> in MinistryPlatform with PKCE and redirect URIs.</li>
+      <li><b>Member login resolves</b> to <span class="f">Contact_ID</span> and filters every screen.</li>
+      <li><b>Read screens wired</b> — profile, household, badge, giving, events, groups.</li>
+      <li><b>Write actions wired</b> — requests, souls, group join, registration.</li>
+      <li><b>Custom tables built</b> — device tokens, Word of the Week, Leadership Principles.</li>
+      <li><b>Moderation gate verified</b> — nothing public until <span class="f">[Approved]</span> = 1.</li>
+      <li><b>Report &amp; block</b> available on member content.</li>
+      <li><b>Account deletion</b> path present in-app.</li>
+      <li><b>Privacy policy &amp; support URLs</b> published.</li>
+      <li><b>App Store privacy labels</b> and <b>Google Data safety</b> form completed.</li>
+      <li><b>Icons, splash &amp; screenshots</b> in the River brand, all sizes.</li>
+      <li><b>Tested on real devices</b> via TestFlight and Internal testing.</li>
+    </ul>
+  </div>
+
+  <div class="callout c-tip"><span class="lbl">Last word</span><p>Verify the current Apple App Store and Google Play policies the week you submit — store rules shift, and a five-minute check saves a rejected build. Everything else here is built to last.</p></div>
+</section>
+
+</div></div>
+
+<!-- ======================= FOOTER ======================= -->
+<footer class="foot">
+  <div class="wrap">
+    <div>
+      <h3>The River at Tampa Bay</h3>
+      <p style="margin:0;color:#9fb6cd">Revival Ministries International</p>
+    </div>
+    <div style="text-align:right">
+      <p class="mono" style="margin:0 0 3px">River Church App · Launch &amp; Integration Manual</p>
+      <p class="mono" style="margin:0">Edition 1.0 · Prepared for Co-Pastor Deanna Gilbert</p>
+    </div>
+  </div>
+</footer>
+
+<button class="totop" id="totop" aria-label="Back to top">↑</button>
+
+<script>
+// scroll-spy + sticky nav hide-on-down + back-to-top
+(function(){
+  var nav=document.getElementById('nav');
+  var links=[].slice.call(nav.querySelectorAll('a'));
+  var parts=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1));});
+  var totop=document.getElementById('totop');
+  function onScroll(){
+    var y=window.scrollY+90, cur=-1;
+    for(var i=0;i<parts.length;i++){ if(parts[i] && parts[i].offsetTop<=y) cur=i; }
+    links.forEach(function(l,i){ l.classList.toggle('on', i===cur); });
+    totop.classList.toggle('show', window.scrollY>700);
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+  totop.onclick=function(){ window.scrollTo({top:0,behavior:'smooth'}); };
+})();
+</script>
+</body>
+</html>
