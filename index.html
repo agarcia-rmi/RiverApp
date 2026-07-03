@@ -1846,7 +1846,7 @@ function openMap(){
   try{
     const bin=atob(MAP_B64); const bytes=Uint8Array.from(bin,c=>c.charCodeAt(0));
     document.getElementById('mapframe').srcdoc=new TextDecoder('utf-8').decode(bytes);
-  }catch(e){ document.getElementById('mapframe').src='data:text/html;base64,'+MAP_B64; }
+  }catch(e){ document.getElementById('mapframe').src='https://river-creative.github.io/rmihq-map/FIRECONF.html'+MAP_B64; }
   el('mapClose').onclick=()=>o.remove();
 }
 
